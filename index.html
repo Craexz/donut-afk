@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Donut AFK</title>
+	<title>DonutSMP | Dashboard</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="https://media.discordapp.net/attachments/1043296804491513866/1106046833563803658/Jacxanw.png?width=670&height=670">
     <style>
         /* Set up variables for consistent colors */
           :root {
@@ -67,7 +68,7 @@
           }
   
           input[type="text"] {
-            width: 50%;
+            width: 100%;
             height: 20px;
             padding: 10px;
             border: none;
@@ -89,19 +90,17 @@
           }
   
           #console {
-            width: 50%;
+            width: 100%;
             height: 600px;
             max-height: 400px;
-            overflow-y: auto;
             border: none;
             outline: none;
+            overflow: auto;
+            overflow-x: none;
             box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
             color: var(--text-color);
             background-color: #131A20;
             padding: 10px;
-            margin-top: 20px;
-            overflow: auto;
-            min-width: 300px;
             border-radius: 5px 5px 0px 0px; /* Unround bottom corners */
             }
   
@@ -114,14 +113,60 @@
               border-radius: 5px;
           }
 
+          #sidebar {
+
+                position: absolute;
+                float: right;
+                width: 20%;
+                height: 460px;
+                background-color: #131A20;
+                color: #fff;
+                border-radius: 10px;
+                vertical-align: top;
+                top: 25%;
+                right: 15%;
+                
+                
+            }
+
+            #sidebar h2 {
+                font-size: 24px;
+                margin: 10px 0 20px 10px;
+            }
+
+            #sidebar p {
+                font-size: 16px;
+                line-height: 1.5;
+                margin: 0 10px 10px 10px;
+            }
+
+            #container {
+
+                width: 40%;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
+                top: 25%;
+                padding-right: 20%;
+                position: absolute;
+                height: 70%;
+            }
+
       </style>
 </head>
 <body>
 	<h1>Donut AFK</h1>
-
-	<div id="console">  </div>
-
-	<input type="text" id="input" style="border: none; outline: none;">
+            <div id = 'container'>
+                <div id="console">  </div>
+                <input type="text" id="input" style="border: none; outline: none;">
+            </div>
+    
+    
+            <div id="sidebar" style = 'position: flex;flex-direction: row;'>
+                <h2>Status</h2>
+                <p>Sidebar content goes here...</p>
+            </div>
+        
 
 <script>
     let scrollTimer = null;
