@@ -125,7 +125,7 @@
                 vertical-align: top;
                 top: 25%;
                 right: 15%;
-                
+                text-align: center;
                 
             }
 
@@ -151,7 +151,28 @@
                 position: absolute;
                 height: 70%;
             }
+            .start-button,
+            .stop-button {
+            border: 1px solid #131A20;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 10px;
+            }
 
+            .start-button {
+            background-color: #4caf50;
+            color: #fff;
+            cursor:pointer;
+            }
+
+            .stop-button {
+            background-color: #f44336;
+            color: #fff;
+            cursor:pointer;
+            }
       </style>
 </head>
 <body>
@@ -163,12 +184,91 @@
     
     
             <div id="sidebar" style = 'position: flex;flex-direction: row;'>
-                <h2>Status</h2>
-                <p>Sidebar content goes here...</p>
+                <br><br>
+                <button class="start-button">Start</button>
+                <button class="stop-button">Stop</button>
             </div>
         
 
 <script>
+    alertCount = 0;
+    lastAlertTime = 0;
+    numAlerts = 0;
+
+    function showAlert(text, timeout) {
+      const now = Date.now();
+      if (now - lastAlertTime < 1000) {
+        numAlerts++;
+        if (numAlerts > 3) {
+          alert('Please slow down. You are trying to spam the alert function.');
+        }
+      } else {
+        numAlerts = 0;
+      }
+      lastAlertTime = now;
+      
+
+      timeout = timeout || 5000;
+      alertCount++;
+    
+      const alertUI = document.createElement('div');
+      alertUI.id = 'alert-ui-' + alertCount;
+      alertUI.style.cssText = 'position: fixed; bottom: ' + (10 + (alertCount - 1) * 150) + 'px; right: 10px; background-color: #333; color: #fff; padding: 10px; border-radius: 5px; font-size: 14px; z-index: 99999; opacity: 0;min-width: 300px;';
+    
+      const titleUI = document.createElement('div');
+      titleUI.textContent = 'Alert';
+      titleUI.style.fontWeight = 'bold';
+      alertUI.appendChild(titleUI);
+    
+      const contentUI = document.createElement('div');
+      contentUI.textContent = text;
+      contentUI.style.marginTop = '10px';
+      alertUI.appendChild(contentUI);
+    
+      const buttonUI = document.createElement('button');
+      buttonUI.textContent = 'OK';
+      buttonUI.style.marginTop = '10px';
+      buttonUI.style.backgroundColor = '#555';
+      buttonUI.style.color = '#fff';
+      buttonUI.style.border = 'none';
+      buttonUI.style.borderRadius = '5px';
+      buttonUI.style.padding = '10px';
+      buttonUI.style.width = '100%';
+      buttonUI.style.outline = "none";
+      buttonUI.addEventListener('mouseenter', () => {
+        buttonUI.style.backgroundColor = '#000';
+      });
+      buttonUI.addEventListener('mouseleave', () => {
+        buttonUI.style.backgroundColor = '#555';
+      });
+      buttonUI.addEventListener('click', () => {
+        alertUI.style.opacity = '0';
+        alertUI.style.pointerEvents = 'none';
+        setTimeout(() => {
+          alertUI.remove();
+        }, 500);
+        alertCount--;
+      });
+      alertUI.appendChild(buttonUI);
+    
+      document.body.appendChild(alertUI);
+    
+      alertUI.style.transition = 'all 0.5s ease-out';
+      alertUI.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        alertUI.style.display = 'block';
+        alertUI.style.opacity = '1';
+        alertUI.style.transform = 'translateX(0)';
+      }, 0);
+      setTimeout(() => {
+        alertUI.style.opacity = '0';
+        setTimeout(() => {
+          alertUI.remove();
+        }, 500);
+        alertCount--;
+      }, timeout);
+    }
+
     let scrollTimer = null;
 
     document.getElementById("console").addEventListener("scroll", function() {
@@ -190,6 +290,19 @@
     });
 
     const socket = new WebSocket('ws://localhost:80');
+
+    const startButton = document.querySelector('.start-button');
+    const stopButton = document.querySelector('.stop-button');
+
+    startButton.addEventListener('click', () => {
+        showAlert("Bot turning on...");
+        socket.send("//turnonbot");
+    });
+
+    stopButton.addEventListener('click', () => {
+        showAlert("Bot turning off...");
+        socket.send("//turnoffbot");
+    });
 
     const input = document.querySelector('input[type="text"]');
     const console = document.querySelector("#console");
