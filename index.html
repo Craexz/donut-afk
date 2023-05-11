@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Donut AFK</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <style>
+        /* Set up variables for consistent colors */
+          :root {
+            --dark-bg: #2d2d2d;
+            --light-bg: #373737;
+            --text-color: #bdbdbd;
+            --accent-color: #464646;
+          }
+          h1 {
+              font-family: 'Montserrat', sans-serif;
+              font-size: 3rem;
+              font-weight: 700;
+              letter-spacing: 2px;
+              text-transform: uppercase;
+              margin-bottom: 30px;
+              color: #fff;
+          }
+  
+          body {
+              font-family: 'Open Sans', sans-serif;
+              background-color: #33404D;
+              color: var(--text-color);
+              background-image: url('your-background-image-here.jpg');
+              background-size: cover;
+              background-position: center center;
+              background-attachment: fixed;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+          }
+  
+          .console-bubble {
+              font-family: 'Roboto', sans-serif;
+              margin-top: 10px;
+              display: inline-block;
+              max-width: 70%;
+              padding: 10px;
+              border-radius: 20px;
+              border-width: 0px;
+              margin-bottom: 10px;
+              clear: both;
+              font-size: 14px;
+              line-height: 1.2;
+              font-weight: 400;
+              letter-spacing: 0.5px;
+          }
+  
+          .console-bubble.user {
+              background-color: var(--dark-bg);
+              float: right;
+          }
+  
+          .console-bubble.bot {
+              background-color: var(--dark-bg);
+              float: left;
+              border-width: 0px;
+          }
+
+          form {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-top: 50px;
+          }
+  
+          input[type="text"] {
+            width: 50%;
+            height: 40px;
+            padding: 10px;
+            border: none;
+            outline: none;
+            border-radius: 0px 0px 10px 10px; /* Unround top corners */
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            color: var(--text-color);
+            background-color: #1F2933;
+            margin-bottom: 20px;
+            text-align: left;
+            padding-left: 10px;
+            letter-spacing: 1px;
+            }
+  
+          input[type="text"]::placeholder {
+              color: #fff;
+              opacity: 1;
+          }
+  
+          #console {
+            width: 50%;
+            height: 600px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: none;
+            outline: none;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+            background-color: #131A20;
+            padding: 10px;
+            margin-top: 20px;
+            overflow: auto;
+            min-width: 300px;
+            border-radius: 10px 10px 0px 0px; /* Unround bottom corners */
+            }
+  
+          #console::-webkit-scrollbar {
+              width: 5px;
+          }
+  
+          #console::-webkit-scrollbar-thumb {
+              background-color: var(--accent-color);
+              border-radius: 5px;
+          }
+      </style>
+</head>
+<body>
+	<h1>Donut AFK</h1>
+	<div id="console"></div>
+
+	<input type="text" id="input" style="border: none; outline: none;">
+
+<script>
+    let scrollTimer = null;
+
+    document.getElementById("console").addEventListener("scroll", function() {
+        if (scrollTimer) {
+            clearTimeout(scrollTimer);
+        }
+
+        scrollTimer = setTimeout(function() {
+            scrollTimer = null;
+        }, 5000);
+    });
+
+    const inputField = document.getElementById("input");
+    
+    inputField.value = "$ " + inputField.value.substring(2);
+
+    inputField.addEventListener("input", function() {
+        inputField.value = "$ " + inputField.value.substring(2);
+    });
+
+    const socket = new WebSocket('ws://localhost:80');
+
+    const input = document.querySelector('input[type="text"]');
+    const console = document.querySelector("#console");
+
+    socket.onmessage = function(event) {
+            const data = event.data;
+
+            const botText = `${data}\n\n`;
+            const botBubble = `<div class="console-bubble bot">${botText}</div>`;
+            console.innerHTML += botBubble;
+            if (!scrollTimer) {
+                    console.scrollTop = console.scrollHeight;
+                    scrollTimer = null;
+            }
+			input.value = "$ " + input.value.substring(2);
+
+	};
+
+    const consoleDiv = document.getElementById('console');
+    const inputBox = document.getElementById('input');
+    inputBox.focus();
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const input = document.querySelector('input[type="text"]');
+        const console = document.querySelector("#console");
+
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                const message = input.value.substring(2);
+
+                console.scrollTop = console.scrollHeight;
+
+				input.value = "$ ";
+				socket.send(message);
+
+
+            }
+        });
+    });
+
+    const consoleBox = document.querySelector('#console');
+    const messageInput = document.querySelector('input[type="text"]');
+    const observer = new MutationObserver(() => {
+        messageInput.style.width = `${consoleBox.offsetWidth - 20}px`;
+    });
+
+    observer.observe(consoleBox, {attributes: true});
+
+    window.addEventListener('resize', () => {
+        messageInput.style.width = `${consoleBox.offsetWidth - 20}px`;
+    });
+</script>
+
+
+</body>
+</html>
