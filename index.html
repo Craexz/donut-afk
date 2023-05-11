@@ -13,6 +13,7 @@
             --accent-color: #464646;
           }
           h1 {
+              text-align: center;
               font-family: 'Montserrat', sans-serif;
               font-size: 3rem;
               font-weight: 700;
@@ -20,6 +21,8 @@
               text-transform: uppercase;
               margin-bottom: 30px;
               color: #fff;
+              position: absolute;
+              top: -20px;
           }
   
           body {
@@ -68,9 +71,11 @@
           }
   
           input[type="text"] {
-            width: 100%;
+            position: fixed;
+            width: 40%;
             height: 20px;
             padding: 10px;
+            top: 70%;
             border: none;
             outline: none;
             border-radius: 0px 0px 5px 5px; /* Unround top corners */
@@ -78,10 +83,10 @@
             font-size: 16px;
             color: var(--text-color);
             background-color: #1F2933;
-            margin-bottom: 20px;
             text-align: left;
             padding-left: 10px;
             letter-spacing: 1px;
+            margin-left: 15%;
             }
   
           input[type="text"]::placeholder {
@@ -90,9 +95,10 @@
           }
   
           #console {
-            width: 100%;
-            height: 600px;
-            max-height: 400px;
+            position: fixed;
+            top: 25%;
+            width: 40%;
+            height: calc(50% - 30px);
             border: none;
             outline: none;
             overflow: auto;
@@ -102,6 +108,7 @@
             background-color: #131A20;
             padding: 10px;
             border-radius: 5px 5px 0px 0px; /* Unround bottom corners */
+            margin-left: 15%;
             }
   
           #console::-webkit-scrollbar {
@@ -112,83 +119,121 @@
               background-color: var(--accent-color);
               border-radius: 5px;
           }
-
-          #sidebar {
+            #statusbar {
+              
+                flex-direction: row;
 
                 position: absolute;
-                float: right;
+                float: left;
                 width: 20%;
-                height: 460px;
+                height: 50%;
                 background-color: #131A20;
                 color: #fff;
-                border-radius: 10px;
-                vertical-align: top;
+                border-radius: 5px;
                 top: 25%;
-                right: 15%;
-                text-align: center;
+                left: 15%;
+                text-align: left;
                 
             }
 
-            #sidebar h2 {
+            #statusbar h2 {
                 font-size: 24px;
                 margin: 10px 0 20px 10px;
             }
 
-            #sidebar p {
+            #statusbar p {
                 font-size: 16px;
                 line-height: 1.5;
                 margin: 0 10px 10px 10px;
             }
 
-            #container {
 
-                width: 40%;
-                justify-content: center;
-                align-items: center;
+            .onoff-button {
                 flex-direction: row;
-                top: 25%;
-                padding-right: 20%;
+
+              
+              
+                border: 1px solid #131A20;
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;  
                 position: absolute;
-                height: 70%;
-            }
-            .start-button,
-            .stop-button {
-            border: 1px solid #131A20;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-weight: bold;
-            font-size: 14px;
-            padding: 10px 20px;
-            margin: 0 5px;
-            border-radius: 10px;
+                float: left;
+                width: 20%;
+                height: 80px;
+                background-color: #131A20;
+                color: #fff;
+                border-radius: 5px;
+                top: 80%;
+                left: 15%;
+                text-align: center;
+
+                font-size: 24px;
             }
 
-            .start-button {
-            background-color: #4caf50;
-            color: #fff;
-            cursor:pointer;
-            }
 
-            .stop-button {
-            background-color: #f44336;
-            color: #fff;
-            cursor:pointer;
+            .onoff-button:hover {
+              background-color: #222;
+              cursor: pointer;
+              
             }
+          #status {
+            padding-top: 10px;
+            padding-left: 10px;
+          }
+
+          #screen-too-small-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #33404D; /* Change this to your desired background color */
+            z-index: 9999;
+            display: none;
+          }
+
+          #screen-too-small-message p {
+              font-size: 24px;
+              text-align: center;
+              margin-top: 50vh;
+          }
       </style>
 </head>
 <body>
-	<h1>Donut AFK</h1>
-            <div id = 'container'>
-                <div id="console">  </div>
-                <input type="text" id="input" style="border: none; outline: none;">
+            <h1>AFK</h1>
+
+            <div id = "statusbar">
+                <p id = "status">✔ Bot Online</p>
             </div>
+  
+
+            <button class="onoff-button">Start</button>
+  
+            <div id="console">  </div>
+            <input type="text" id="input" style="border: none; outline: none;">
     
     
-            <div id="sidebar" style = 'position: flex;flex-direction: row;'>
-                <br><br>
-                <button class="start-button">Start</button>
-                <button class="stop-button">Stop</button>
-            </div>
-        
+            <script>
+              var minScreenWidth = 1024; // Adjust this value to your desired minimum screen width
+              var minScreenHeight = 768; // Adjust this value to your desired minimum screen height
+              var screenTooSmallMessage = document.createElement('div');
+              screenTooSmallMessage.id = 'screen-too-small-message';
+              screenTooSmallMessage.innerHTML = '<p>Your screen is too small to view this page.</p>';
+              document.body.appendChild(screenTooSmallMessage);
+      
+              function checkScreenSize() {
+                  var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                  var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      
+                  if (screenWidth < minScreenWidth || screenHeight < minScreenHeight) {
+                      screenTooSmallMessage.style.display = 'block';
+                  } else {
+                      screenTooSmallMessage.style.display = 'none';
+                  }
+              }
+      
+              setInterval(checkScreenSize, 100);
+              window.addEventListener('resize', checkScreenSize);
+          </script>
 
 <script>
     alertCount = 0;
@@ -269,16 +314,22 @@
       }, timeout);
     }
 
+    var userInitiatedScroll = true;
     let scrollTimer = null;
 
     document.getElementById("console").addEventListener("scroll", function() {
-        if (scrollTimer) {
-            clearTimeout(scrollTimer);
-        }
 
-        scrollTimer = setTimeout(function() {
-            scrollTimer = null;
-        }, 5000);
+        if (userInitiatedScroll === true ){
+          scrollTimer = setTimeout(function() {
+              scrollTimer = null;
+          }, 10000);
+        } else {
+          userInitiatedScroll = true;
+          if (scrollTimer) {
+              clearTimeout(scrollTimer);
+          }
+        }
+        
     });
 
     const inputField = document.getElementById("input");
@@ -289,35 +340,51 @@
         inputField.value = "$ " + inputField.value.substring(2);
     });
 
-    const socket = new WebSocket('ws://localhost:80');
+    const socket = new WebSocket('ws://localhost:443');
 
-    const startButton = document.querySelector('.start-button');
-    const stopButton = document.querySelector('.stop-button');
-
-    startButton.addEventListener('click', () => {
-        showAlert("Bot turning on...");
-        socket.send("//turnonbot");
+    const onoffbutton = document.querySelector('.onoff-button');
+    onoffbutton.addEventListener('click', () => {
+        socket.send("//togglebot");
     });
 
-    stopButton.addEventListener('click', () => {
-        showAlert("Bot turning off...");
-        socket.send("//turnoffbot");
-    });
 
     const input = document.querySelector('input[type="text"]');
     const console = document.querySelector("#console");
 
     socket.onmessage = function(event) {
             const data = event.data;
+            if (data.substring(0,4) === "msg-") {
+                setTimeout(() => {
+                  const botText = `${data.slice(4)}`;
+                  const botBubble = `<div class="console-bubble bot">${botText}</div>`;
+                  console.innerHTML += botBubble;
+                  
+      			      input.value = "$ " + input.value.substring(2);
 
-            const botText = `${data}`;
-            const botBubble = `<div class="console-bubble bot">${botText}</div>`;
-            console.innerHTML += botBubble;
-            if (!scrollTimer) {
-                    console.scrollTop = console.scrollHeight;
-                    scrollTimer = null;
+
+                  if (!scrollTimer) {
+                        userInitiatedScroll = false;
+
+                        console.scrollTop = console.scrollHeight;
+                  }
+                }, 50); 
+                
+            } else if (data.substring(0,4) === "sts-") {
+                var sts = data.slice(4);
+              
+                if (sts === "on") {
+                  var onoffbutton = document.querySelector('.onoff-button');
+                  onoffbutton.innerHTML = "Stop";
+                  document.getElementById("status").innerHTML = "Status - Bot Online";
+                  
+                } else if (sts === "off") {
+                  var onoffbutton = document.querySelector('.onoff-button');
+                  onoffbutton.innerHTML = "Start";
+                  document.getElementById("status").innerHTML = "Status - Bot Offline"
+                }
             }
-			input.value = "$ " + input.value.substring(2);
+
+            
 
 	};
 
