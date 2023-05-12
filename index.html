@@ -403,19 +403,25 @@
     socket.onmessage = function(event) {
             const data = event.data;
             if (data.substring(0,4) === "msg-") {
+                
                 setTimeout(() => {
-                  const botText = `${data.slice(4)}`;
-                  const botBubble = `<div class="console-bubble bot">${botText}</div>`;
-                  console.innerHTML += botBubble;
                   
-      			      input.value = "$ " + input.value.substring(2);
+                  const botText = `${data.slice(4)}`;
+                
+                  if (botText !== `<span style="color:#5F5">Shop > <span style="color:#FFF">You bought <span style="color:#F55">64 x <span style="color:#F5F">Creeper<span style="color:#FFF"> for <span style="color:#F55">$64,000,000<span style="color:#FFF">.</span></span></span></span></span></span></span>` && botText !== `<span style="color:#5F5">Shop > <span style="color:#FFF">You don't have enough free space in your inventory.</span></span>`) {
+                    const botBubble = `<div class="console-bubble bot">${botText}</div>`;
+                    console.innerHTML += botBubble;
+                    
+                    input.value = "$ " + input.value.substring(2);
 
 
-                  if (!scrollTimer) {
-                        userInitiatedScroll = false;
+                    if (!scrollTimer) {
+                          userInitiatedScroll = false;
 
-                        console.scrollTop = console.scrollHeight;
+                          console.scrollTop = console.scrollHeight;
+                    }
                   }
+                  
                 }, 50); 
                 
             } else if (data.substring(0,4) === "sts-") {
