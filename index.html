@@ -465,8 +465,7 @@
                 setTimeout(() => {
                   
                   const botText = `${data.slice(4)}`;
-                
-                  if (botText !== `<span style="color:#5F5">Shop > <span style="color:#FFF">You bought <span style="color:#F55">64 x <span style="color:#F5F">Creeper<span style="color:#FFF"> for <span style="color:#F55">$64,000,000<span style="color:#FFF">.</span></span></span></span></span></span></span>` && botText !== `<span style="color:#5F5">Shop > <span style="color:#FFF">You don't have enough free space in your inventory.</span></span>`) {
+                  if (!botText.includes(`You bought <span style="color:#F55">`) && !botText.includes(`You don't have enough free space in your inventory.`)) {
                     const botBubble = `<div class="console-bubble bot">${botText}</div>`;
                     console.innerHTML += botBubble;
                     
