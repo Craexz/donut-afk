@@ -119,6 +119,33 @@
               background-color: var(--accent-color);
               border-radius: 5px;
           }
+
+          #logs {
+            position: fixed;
+            top: 25%;
+            width: 15%;
+            height: calc(50% - 30px);
+            border: none;
+            outline: none;
+            overflow: auto;
+            overflow-x: none;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+            background-color: #131A20;
+            padding: 10px;
+            border-radius: 5px 5px 0px 0px; /* Unround bottom corners */
+            margin-left: 80%;
+            }
+  
+          #logs::-webkit-scrollbar {
+              width: 5px;
+          }
+  
+          #logs::-webkit-scrollbar-thumb {
+              background-color: var(--accent-color);
+              border-radius: 5px;
+          }
+
             #statusbar {
               
                 flex-direction: row;
@@ -209,6 +236,9 @@
             <button class="onoff-button">Stop</button>
   
             <div id="console">  </div>
+
+            <div id="logs">  </div>
+
             <input type="text" id="input" style="border: none; outline: none;">
     
     
@@ -332,6 +362,25 @@
         
     });
 
+
+    var logsuserInitiatedScroll = true;
+    let logsscrollTimer = null;
+    document.getElementById("console").addEventListener("scroll", function() {
+
+      if (logsuserInitiatedScroll === true ){
+        logsscrollTimer = setTimeout(function() {
+          logsscrollTimer = null;
+        }, 10000);
+
+      } else {
+        logsuserInitiatedScroll = true;
+        if (logsscrollTimer) {
+            clearTimeout(logsscrollTimer);
+        }
+      }
+
+    });
+
     const inputField = document.getElementById("input");
     
     inputField.value = "$ " + inputField.value.substring(2);
@@ -382,6 +431,22 @@
                   onoffbutton.innerHTML = "Start";
                   document.getElementById("status").innerHTML = "Status - Bot Offline"
                 }
+            } else if (data.substring(0,4) === "log-") {
+                logs = document.querySelector("#logs");
+
+                var log = data.slice(4);
+                setTimeout(() => {
+                  const botText = `${data.slice(4)}`;
+                  const botBubble = `<div class="console-bubble bot">${log}</div>`;
+                  logs.innerHTML += botBubble;
+
+                  if (!scrollTimer) {
+                        logsuserInitiatedScroll = false;
+
+                        logs.scrollTop = logs.scrollHeight;
+                  }
+                }, 50); 
+                
             }
 
             
