@@ -185,35 +185,6 @@
                 line-height: 1.5;
                 margin: 0 10px 10px 10px;
             }
-
-
-            .onoff-button {
-                flex-direction: row;
-
-              
-              
-                border: 1px solid #131A20;
-                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;  
-                position: absolute;
-                float: left;
-                width: 20%;
-                height: 80px;
-                background-color: #131A20;
-                color: #fff;
-                border-radius: 5px;
-                top: 80%;
-
-                text-align: center;
-
-                font-size: 24px;
-            }
-
-
-            .onoff-button:hover {
-              background-color: #222;
-              cursor: pointer;
-              
-            }
           #status {
             padding-top: 10px;
             padding-left: 10px;
@@ -275,6 +246,60 @@
             align-items: center;
             justify-content: center;
           }
+          .onoff-button {
+                flex-direction: row;
+
+              
+              
+                border: 1px solid #131A20;
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;  
+                position: absolute;
+                float: left;
+                width: 10%;
+                height: 80px;
+                background-color: #131A20;
+                color: #fff;
+                border-radius: 5px;
+                top: 80%;
+
+                text-align: center;
+
+                font-size: 24px;
+                margin-right: 15%;
+
+            }
+
+
+          .onoff-button:hover {
+              background-color: #222;
+              cursor: pointer;
+              
+          }
+          .selltoggle-button {
+                flex-direction: row;
+                border: 1px solid #131A20;
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;  
+                position: absolute;
+                float: right;
+                width: 10%;
+                height: 80px;
+                background-color: #131A20;
+                color: #fff;
+                border-radius: 5px;
+                top: 80%;
+                margin-left: 15%;
+
+                text-align: center;
+
+                font-size: 24px;
+            }
+
+
+          .selltoggle-button:hover {
+              background-color: #222;
+              cursor: pointer;
+              
+          }
 
       </style>
 </head>
@@ -289,7 +314,8 @@
             </div>
   
 
-            <button class="onoff-button">Stop</button>
+            <button class="onoff-button">Start Macro</button>
+            <button class="selltoggle-button">Start Selling</button>
   
             <div id="console">  </div>
             
@@ -451,9 +477,13 @@
 
     const onoffbutton = document.querySelector('.onoff-button');
     onoffbutton.addEventListener('click', () => {
-        socket.send("//togglebot");
+        socket.send("//togglemacro");
     });
 
+    const sellbutton = document.querySelector('.selltoggle-button');
+    sellbutton.addEventListener('click', () => {
+        socket.send("//togglesell");
+    });
 
     const input = document.querySelector('input[type="text"]');
     const console = document.querySelector("#console");
@@ -484,16 +514,28 @@
             } else if (data.substring(0,4) === "sts-") {
                 var sts = data.slice(4);
               
-                if (sts === "on") {
+                if (sts === "macro-on") {
                   var onoffbutton = document.querySelector('.onoff-button');
-                  onoffbutton.innerHTML = "Stop";
+                  onoffbutton.innerHTML = "Stop Macro";
                   document.getElementById("status").innerHTML = "Status - Bot Online";
                   
-                } else if (sts === "off") {
+                } else if (sts === "macro-off") {
                   var onoffbutton = document.querySelector('.onoff-button');
-                  onoffbutton.innerHTML = "Start";
+                  onoffbutton.innerHTML = "Start Macro";
+                  document.getElementById("status").innerHTML = "Status - Bot Offline"
+
+                  
+                } else if (sts === "sell-off") {
+                  var onoffbutton = document.querySelector('.selltoggle-button');
+                  onoffbutton.innerHTML = "Start Selling";
+                  document.getElementById("status").innerHTML = "Status - Bot Offline"
+
+                } else if (sts === "sell-on") {
+                  var onoffbutton = document.querySelector('.selltoggle-button');
+                  onoffbutton.innerHTML = "Stop Selling";
                   document.getElementById("status").innerHTML = "Status - Bot Offline"
                 }
+
             } else if (data.substring(0,4) === "log-") {
                 logs = document.querySelector("#logs");
 
